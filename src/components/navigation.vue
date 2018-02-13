@@ -1,13 +1,13 @@
 <template>
 	<ul>
 		<li v-if="!authed">
-			<router-link to="login">Login</router-link>
+			<router-link :to="{name: 'login'}">Login</router-link>
 		</li>
 		<li v-if="!authed">
-			<router-link to="register">Register</router-link>
+			<router-link :to="{name: 'register'}">Register</router-link>
 		</li>
 		<li v-if="authed">
-			<router-link to="profile">Profile</router-link>
+			<router-link :to="{name: 'profile'}">Profile</router-link>
 		</li>
 		<li v-if="authed">
 			<logout-link></logout-link>

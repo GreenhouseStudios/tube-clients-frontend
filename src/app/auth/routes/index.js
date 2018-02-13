@@ -1,4 +1,4 @@
-import {Login, Register, Profile} from '../components/index'
+import {Login, Register, Profile, Update} from '../components/index'
 
 
 export default [
@@ -24,6 +24,15 @@ export default [
 		path: '/profile',
 		component: Profile,
 		name: "profile",
+		meta: {
+			guest: false,
+			needsAuth: true
+		}
+	},
+	{
+		path: '/profile/update',
+		component: Update,
+		name: "update",
 		meta: {
 			guest: false,
 			needsAuth: true

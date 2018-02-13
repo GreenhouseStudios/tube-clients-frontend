@@ -6,6 +6,7 @@ const config = require ('../config/development.config')
 
 module.exports = merge(base, {
 	devServer: {
+		historyApiFallback: true,
 		compress: true,
 		port: 3000,
 		overlay: true

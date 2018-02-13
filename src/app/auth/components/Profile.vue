@@ -6,6 +6,7 @@
 			<p>{{user.email}}</p>
 		</div>
 		<p v-else>Loading...</p>
+		<router-link to="profile/update">Update</router-link>
 	</div>
 </template>
 

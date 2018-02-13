@@ -15,6 +15,13 @@ export const register = ({commit, dispatch}, {payload, context}) => {
 		email: payload.email
 	}).then((response) => {
 		dispatch('login', {payload, context})
+	}).catch((error) => {
+		context.loading = false
+		if (error.response) {
+			context.error = error.response.data.Error
+		} else {
+			context.error = "Something went wrong. Please Try Again Later."
+		}
 	})
 }
 
@@ -47,8 +54,16 @@ export const setToken = ({commit, dispatch}, token) => {
 	setHttpToken(token)
 }
 
+export const getUserIfNull = ({commit, state, dispatch}, payload) => {
+	if(state.user == null) {
+		return dispatch('getUser')
+	} else {
+		return Promise.resolve(true)
+	}
+}
+
 export const getUser = ({commit}, payload) => {
-	return axios.get(process.env.API_URL + '/auth_test').then((response) => {
+	return axios.get(process.env.API_URL + '/client/authedUser').then((response) => {
 		// set the user data in the store
 		commit('setUser', response.data)
 		// set the authenticated state in the store to true
@@ -62,13 +77,14 @@ export const refreshToken = ({commit, dispatch}, payload) => {
 	return axios.get(process.env.API_URL + '/refresh_token').then((response) => {
 		dispatch('setToken', response.data.token)
 	}).catch((error) => {
+		dispatch('setToken', null)
 		console.log(error)
 	})
 }
 
 export const checkTokenExists = ({commit, dispatch}, payload) => {
 	return localForage.getItem('authtoken').then((token) => {
-		if(isEmpty(token)) {
+		if (isEmpty(token)) {
 			return Promise.reject('NO_STORAGE_TOKEN')
 		}
 
@@ -80,4 +96,23 @@ export const logout = ({commit, dispatch}, payload) => {
 	dispatch('setToken', null)
 	commit('setUser', null)
 	commit('setAuthenticated', false)
+}
+
+export const updateProfile = ({commit, dispatch}, {payload, context}) => {
+	context.loading = true
+	context.error = null
+
+	axios.put(process.env.API_URL + '/client/' + payload.ID, payload).then((response) => {
+		dispatch('common/addAlert', {
+			payload: {
+				message: "Your Settings Have Been Updated",
+				id: null
+			}
+		}, {root: true})
+		context.loading = false
+	}).catch((error) => {
+		context.loading = false
+		context.error = error;
+		console.log(error)
+	})
 }
