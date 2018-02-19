@@ -52,8 +52,6 @@ export const login = ({commit, dispatch}, {payload, context}) => {
 export const setToken = ({commit, dispatch}, token) => {
 	// trigger the setToken mutation
 	commit('setToken', token)
-	// set the axios authorization header with the token helper
-	setHttpToken(token)
 }
 
 export const getUserIfNull = ({commit, state, dispatch}, payload) => {
@@ -76,7 +74,6 @@ export const getUser = ({commit}, payload) => {
 }
 
 export const refreshToken = ({commit, dispatch}, payload) => {
-	console.log('refreshToken')
 	return axios.get(process.env.API_URL + '/refresh_token').then((response) => {
 		dispatch('setToken', response.data.token)
 		return Promise.resolve(response.data.token)
@@ -104,11 +101,6 @@ export const logout = ({commit, dispatch}, payload) => {
 	dispatch('setToken', null)
 	commit('setUser', null)
 	commit('setAuthenticated', false)
-	dispatch('common/addAlert', {
-		payload: {
-			message: "Logout Successful"
-		}
-	}, {root: true})
 }
 
 export const updateProfile = ({commit, dispatch}, {payload, context}) => {

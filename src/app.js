@@ -9,32 +9,43 @@ import domready from 'domready'
 
 class App {
 	constructor() {
-		App.configureLocalForage()
-		App.configureAxios()
+		this.configureAxios()
+		this.configureLocalForage()
 
-		this.initVue()
 	}
 
-	static configureLocalForage() {
-		localForage.config({
-			driver: localForage.LOCALSTORAGE,
-			storeName: 'app'
-		})
-	}
-
-	static configureAxios() {
+	configureAxios() {
 		// set json header type for all post, put, and delete requests
 		axios.defaults.headers.post['Content-Type'] = 'application/json'
 		axios.defaults.headers.put['Content-Type'] = 'application/json'
 		axios.defaults.headers.delete['Content-Type'] = 'application/json'
-
-		// no need to handle the jwt header, as this is handled by vuex below
 	}
 
-	initVue() {
+	configureLocalForage() {
+		localForage.config({
+			driver: localForage.LOCALSTORAGE,
+			storeName: 'app'
+		})
 
+		localForage.getItem('authtoken').then((token) => {
+			if (!isEmpty(token)) {
+				// set the authtoken to the axios authorization header and the vuex store
+				store.dispatch('auth/setToken', token).then(() => {
+					// load the user into the vuex store
+					store.dispatch('auth/getUser')
+				})
+			} else {
+				// otherwise, log us out
+				store.dispatch('auth/logout')
+			}
+
+			this.configureVue()
+		})
+	}
+
+	configureVue() {
 		// instantiate vue
-		new Vue({
+		this.vue = new Vue({
 			router,
 			store,
 			render: h => h(Shell)
@@ -42,15 +53,6 @@ class App {
 
 		// initialize the filters
 		require('@/core/Filters')
-
-		// add the jwt to the store, if there is one. This will also set the axios authorization header
-		localForage.getItem('authtoken').then((token) => {
-			if (!isEmpty(token)) {
-				store.dispatch('auth/setToken', token).then(() => {
-					store.dispatch('auth/getUser')
-				})
-			}
-		})
 	}
 }
 

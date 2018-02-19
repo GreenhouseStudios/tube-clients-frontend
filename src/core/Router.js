@@ -19,8 +19,10 @@ class Router extends VueRouter {
 				// get the user if need be
 				Store.dispatch('auth/getUserIfNull').then(() => {
 					if (to.meta.guest) {
-						next({name: 'profile'})
-						return
+						Store.dispatch('common/addAlert', {payload: {message: "You Are Already Logged In"}}).then((res) => {
+							next({name: 'profile'})
+							return
+						})
 					}
 
 					// 2. Notification Guard
@@ -38,8 +40,10 @@ class Router extends VueRouter {
 				//})
 			}).catch(() => {
 				if (to.meta.needsAuth) {
-					next({name: 'login'})
-					return
+					Store.dispatch('common/addAlert', {payload: {message: "You Must Log In First"}}).then((res) => {
+						next({name: 'login'})
+						return
+					})
 				}
 				next()
 			})

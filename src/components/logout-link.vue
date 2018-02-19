@@ -3,12 +3,23 @@
 </template>
 
 <script>
+	import {mapActions} from 'vuex'
+
 	export default {
 		name: "logout-button",
 		methods: {
+			...mapActions({
+				addAlert: 'common/addAlert',
+			}),
 			logout() {
 				this.$store.dispatch('auth/logout').then(() => {
-					this.$router.push({name: 'login'})
+					this.addAlert({
+						payload: {
+							message: "Logout Successful"
+						}
+					}).then(() => {
+						this.$router.push({name: 'login'})
+					})
 				})
 			}
 		}
