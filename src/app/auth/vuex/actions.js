@@ -76,11 +76,13 @@ export const getUser = ({commit}, payload) => {
 }
 
 export const refreshToken = ({commit, dispatch}, payload) => {
+	console.log('refreshToken')
 	return axios.get(process.env.API_URL + '/refresh_token').then((response) => {
 		dispatch('setToken', response.data.token)
+		return Promise.resolve(response.data.token)
 	}).catch((error) => {
 		dispatch('setToken', null)
-		console.log(error)
+		return Promise.reject('REFRESHING_TOKEN_FAILED')
 	})
 }
 
@@ -89,8 +91,12 @@ export const checkTokenExists = ({commit, dispatch}, payload) => {
 		if (isEmpty(token)) {
 			return Promise.reject('NO_STORAGE_TOKEN')
 		}
+		dispatch('refreshToken').then((token) => {
+			return Promise.resolve(token)
+		}).catch((error) => {
+			return Promise.reject(error)
+		})
 
-		return Promise.resolve(token)
 	})
 }
 
