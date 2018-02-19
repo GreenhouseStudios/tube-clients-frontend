@@ -55,7 +55,7 @@ export const setToken = ({commit, dispatch}, token) => {
 }
 
 export const getUserIfNull = ({commit, state, dispatch}, payload) => {
-	if(state.user == null) {
+	if (state.user == null) {
 		return dispatch('getUser')
 	} else {
 		return Promise.resolve(true)
@@ -99,8 +99,8 @@ export const logout = ({commit, dispatch}, payload) => {
 }
 
 export const updateProfile = ({commit, dispatch}, {payload, context}) => {
-	context.loading = true
-	context.error = null
+	context.profile.loading = true
+	context.profileerror = null
 
 	axios.put(process.env.API_URL + '/client/' + payload.ID, payload).then((response) => {
 		dispatch('common/addAlert', {
@@ -109,10 +109,30 @@ export const updateProfile = ({commit, dispatch}, {payload, context}) => {
 				id: null
 			}
 		}, {root: true})
-		context.loading = false
+		context.profile.loading = false
 	}).catch((error) => {
-		context.loading = false
-		context.error = error;
-		console.log(error)
+		context.profile.loading = false
+		context.profile.error = error;
+	})
+}
+
+export const updatePassword = ({commit, dispatch}, {payload, context}) => {
+	context.password.loading = true
+	context.password.error = ''
+
+	axios.put(process.env.API_URL + '/client/' + payload.ID + '/updatePassword', payload.passwordData).then((response) => {
+		dispatch('common/addAlert', {
+			payload: {
+				message: "You Password Has Been Updated"
+			}
+		}, {root: true})
+		context.password.loading = false
+		context.password.oldpassword = ''
+		context.password.newpassword = ''
+		context.password.newpasswordconfirm = ''
+	}).catch((error) => {
+		context.password.loading = false
+		context.password.error = error.response.data.Error
+		console.log(error.response.data.Error)
 	})
 }

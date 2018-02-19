@@ -1,7 +1,7 @@
 <template>
 	<div id="alerts">
 		<div v-for="alert in alerts" class="alert" :key="alert.id" :id="'alert-' + alert.id">
-			{{ alert.id }} - {{ alert.message }}<br>
+			{{ alert.message }}<br>
 			<a href="#" @click.self.prevent.stop="closeAlert(alert.id)" v-if="!alert.persistent">Close</a>
 		</div>
 	</div>
@@ -9,6 +9,7 @@
 
 <script>
 	import {mapGetters, mapActions} from 'vuex'
+
 	export default {
 		name: "alerts",
 		computed: {
@@ -21,14 +22,16 @@
 				removeAlert: 'common/removeAlert'
 			}),
 			closeAlert(id) {
-				this.$el.querySelector('#alert-' + id).style.opacity = 0
 				setTimeout(() => {
-					this.removeAlert({
-						payload: {
-							id: id
-						}
-					})
-				}, 150)
+					this.$el.querySelector('#alert-' + id).style.opacity = 0
+					setTimeout(() => {
+						this.removeAlert({
+							payload: {
+								id: id
+							}
+						})
+					}, 150)
+				})
 			}
 		}
 	}

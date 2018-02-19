@@ -17,14 +17,25 @@
 			<input type="email" name="email" id="email" v-model="user.email" required
 			       autocomplete="email">
 			<br>
-			<button v-if="!loading">Update</button>
+			<button v-if="!profile.loading">Update</button>
 			<span v-else>Loading...</span>
-			<span style="color:red">{{ error }}</span>
+			<span style="color:red">{{ profile.error }}</span>
 		</form>
 		<h1>Update Password</h1>
-		{{user}}
 		<form @submit.prevent="attemptUpdatePassword">
-
+			<label for="oldpassword">Old Password</label>
+			<input type="password" name="oldpassword" id="oldpassword" required v-model="password.oldpassword">
+			<br>
+			<label for="newpassword">New Password</label>
+			<input type="password" name="newpassword" id="newpassword" required v-model="password.newpassword">
+			<br>
+			<label for="newpasswordconfirm">Confirm New Password</label>
+			<input type="password" name="newpasswordconfirm" id="newpasswordconfirm"
+			       required v-model="password.newpasswordconfirm">
+			<br>
+			<button v-if="!password.loading">Update</button>
+			<span v-else>Loading...</span>
+			<span style="color:red">{{ password.error }}</span>
 		</form>
 	</div>
 </template>
@@ -36,8 +47,17 @@
 		name: "Update",
 		data() {
 			return {
-				error: '',
-				loading: false
+				profile: {
+					error: '',
+					loading: false
+				},
+				password: {
+					oldpassword: '',
+					newpassword: '',
+					newpasswordconfirm: '',
+					error: '',
+					loading: false,
+				}
 			}
 		},
 		computed: {
@@ -47,7 +67,8 @@
 		},
 		methods: {
 			...mapActions({
-				updateProfile: 'auth/updateProfile'
+				updateProfile: 'auth/updateProfile',
+				updatePassword: 'auth/updatePassword',
 			}),
 			attemptUpdateProfile() {
 				this.updateProfile({
@@ -56,7 +77,20 @@
 				})
 			},
 			attemptUpdatePassword() {
-
+				if (this.password.newpasswordconfirm !== this.password.newpassword) {
+					this.password.error = 'New Password Must Match'
+					return;
+				}
+				this.updatePassword({
+					payload: {
+						ID: this.user.ID,
+						passwordData: {
+							OldPassword: this.password.oldpassword,
+							NewPassword: this.password.newpassword
+						}
+					},
+					context: this
+				})
 			}
 		}
 	}

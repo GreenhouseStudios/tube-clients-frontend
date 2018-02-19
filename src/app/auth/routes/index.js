@@ -1,7 +1,16 @@
-import {Login, Register, Profile, Update} from '../components/index'
+import {Login, Register, Profile, Update, Home} from '../components/index'
 
 
 export default [
+	{
+		path: '/',
+		component: Home,
+		name: "home",
+		meta: {
+			guest: true,
+			needsAuth: false
+		}
+	},
 	{
 		path: '/login',
 		component: Login,
