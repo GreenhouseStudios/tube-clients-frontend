@@ -35,9 +35,10 @@
     "axios": "^0.17.1",
     "domready": "^1.0.8",
     "localforage": "^1.5.6",
+    "lodash": "latest",
+    "moment": "^2.20.1",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1",
-	"lodash": "latest"
+    "vuex": "^3.0.1"
   }
 }

@@ -34,7 +34,9 @@ export const login = ({commit, dispatch}, {payload, context}) => {
 	}).then((response) => {
 		dispatch('setToken', response.data.token).then(() => {
 			dispatch('getUser').then(() => {
-				context.$router.push('profile')
+				context.$router.push({
+					name: 'requests'
+				})
 			})
 		})
 	}).catch((error) => {
@@ -96,6 +98,11 @@ export const logout = ({commit, dispatch}, payload) => {
 	dispatch('setToken', null)
 	commit('setUser', null)
 	commit('setAuthenticated', false)
+	dispatch('common/addAlert', {
+		payload: {
+			message: "Logout Successful"
+		}
+	}, {root: true})
 }
 
 export const updateProfile = ({commit, dispatch}, {payload, context}) => {
@@ -123,7 +130,7 @@ export const updatePassword = ({commit, dispatch}, {payload, context}) => {
 	axios.put(process.env.API_URL + '/client/' + payload.ID + '/updatePassword', payload.passwordData).then((response) => {
 		dispatch('common/addAlert', {
 			payload: {
-				message: "You Password Has Been Updated"
+				message: "Your Password Has Been Updated"
 			}
 		}, {root: true})
 		context.password.loading = false

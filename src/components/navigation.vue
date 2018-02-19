@@ -1,18 +1,26 @@
 <template>
-	<ul>
-		<li v-if="!authed">
-			<router-link :to="{name: 'login'}">Login</router-link>
-		</li>
-		<li v-if="!authed">
-			<router-link :to="{name: 'register'}">Register</router-link>
-		</li>
-		<li v-if="authed">
-			<router-link :to="{name: 'profile'}">Profile</router-link>
-		</li>
-		<li v-if="authed">
-			<logout-link></logout-link>
-		</li>
-	</ul>
+	<nav>
+		<ul v-if="!authed">
+			<li>
+				<router-link :to="{name: 'login'}">Login</router-link>
+			</li>
+			<li>
+				<router-link :to="{name: 'register'}">Register</router-link>
+			</li>
+		</ul>
+		<ul v-else>
+			<li>
+				<router-link :to="{name: 'profile'}">Profile</router-link>
+			</li>
+			<li>
+				<router-link :to="{name: 'requests'}">Requests</router-link>
+			</li>
+
+			<li>
+				<logout-link></logout-link>
+			</li>
+		</ul>
+	</nav>
 </template>
 
 <script>

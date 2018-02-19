@@ -40,6 +40,9 @@ class App {
 			render: h => h(Shell)
 		}).$mount('#app');
 
+		// initialize the filters
+		require('@/core/Filters')
+
 		// add the jwt to the store, if there is one. This will also set the axios authorization header
 		localForage.getItem('authtoken').then((token) => {
 			if (!isEmpty(token)) {
