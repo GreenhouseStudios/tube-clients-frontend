@@ -9,8 +9,12 @@ export const addAlert = (state, alert) => {
 		alert.id = ++max
 	}
 
-	if(alert.persistent === undefined) {
+	if (alert.persistent === undefined) {
 		alert.persistent = false
+	}
+
+	if (alert.preloaded === undefined) {
+		alert.prelaoded = false
 	}
 
 	state.alerts.push(alert)

@@ -1,4 +1,4 @@
-import {RequestFeed} from "../components";
+import {Request, RequestFeed, CreateRequest} from "../components";
 
 export default [
 	{
@@ -8,6 +8,24 @@ export default [
 		meta: {
 			guest: false,
 			needsAuth: true,
+		}
+	},
+	{
+		path: '/request/create',
+		component: CreateRequest,
+		name: "createRequest",
+		meta: {
+			guest: false,
+			needsAuth: true,
+		}
+	},
+	{
+		path: '/request/:id',
+		component: Request,
+		name: "request",
+		meta: {
+			guest: false,
+			needsAuth: true
 		}
 	}
 ]

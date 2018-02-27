@@ -30,7 +30,11 @@ class Router extends VueRouter {
 					if (alerts.length > 0) {
 						for (let alert of alerts) {
 							if (!alert.persistent) {
-								Store.dispatch('common/removeAlert', {payload: {id: alert.id}})
+								if(alert.preloaded) {
+									alert.preloaded = false
+								} else {
+									Store.dispatch('common/removeAlert', {payload: {id: alert.id}})
+								}
 							}
 						}
 					}
@@ -39,13 +43,16 @@ class Router extends VueRouter {
 				})
 				//})
 			}).catch(() => {
-				if (to.meta.needsAuth) {
-					Store.dispatch('common/addAlert', {payload: {message: "You Must Log In First"}}).then((res) => {
-						next({name: 'login'})
-						return
-					})
-				}
-				next()
+				// If a valid token does not exist, we need to log out.
+				Store.dispatch('auth/logout').then(() => {
+					if (to.meta.needsAuth) {
+						Store.dispatch('common/addAlert', {payload: {message: "You Must Log In First"}}).then((res) => {
+							next({name: 'login'})
+							return
+						})
+					}
+					next()
+				})
 			})
 		})
 	}

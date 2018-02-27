@@ -88,7 +88,7 @@ export const checkTokenExists = ({commit, dispatch}, payload) => {
 		if (isEmpty(token)) {
 			return Promise.reject('NO_STORAGE_TOKEN')
 		}
-		dispatch('refreshToken').then((token) => {
+		return dispatch('refreshToken').then((token) => {
 			return Promise.resolve(token)
 		}).catch((error) => {
 			return Promise.reject(error)
